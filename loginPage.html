@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <script>
+      window.FontAwesomeConfig = {
+        autoReplaceSvg: "nest",
+      };
+    </script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="./js/authClient.js"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+            colors: {
+              dark: {
+                900: "#0F1115",
+                800: "#1A1D24",
+                700: "#262A33",
+                600: "#3A3F4C",
+              },
+              primary: {
+                500: "#D4FF32",
+                600: "#BBE620",
+              },
+              accent: {
+                purple: "#8A2BE2",
+                blue: "#4169E1",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #0f1115;
+        color: #ffffff;
+      }
+      .glass-panel {
+        background: rgba(26, 29, 36, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .gradient-text {
+        background: linear-gradient(90deg, #d4ff32, #8a2be2);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0f1115;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #262a33;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #3a3f4c;
+      }
+      .input-field {
+        background: rgba(26, 29, 36, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+      }
+      .input-field:focus {
+        background: rgba(26, 29, 36, 0.8);
+        border-color: #d4ff32;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(212, 255, 50, 0.1);
+      }
+
+      .input-field.input-error {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.14);
+      }
+
+      .email-error-popup {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transform: translateY(-4px);
+        transition: all 0.24s ease;
+      }
+
+      .email-error-popup.show {
+        max-height: 96px;
+        opacity: 1;
+        transform: translateY(0);
+        margin-top: 0.6rem;
+      }
+
+      .password-error-popup {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transform: translateY(-4px);
+        transition: all 0.24s ease;
+      }
+
+      .password-error-popup.show {
+        max-height: 96px;
+        opacity: 1;
+        transform: translateY(0);
+        margin-top: 0.6rem;
+      }
+
+      .remember-toggle {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .remember-track {
+        width: 44px;
+        height: 24px;
+        border-radius: 999px;
+        background: #262a33;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        position: relative;
+        transition: all 0.22s ease;
+        box-shadow: inset 0 1px 6px rgba(0, 0, 0, 0.35);
+      }
+
+      .remember-track::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #d1d5db;
+        transition: all 0.22s ease;
+      }
+
+      .remember-toggle:checked + .remember-track {
+        background: rgba(212, 255, 50, 0.25);
+        border-color: rgba(212, 255, 50, 0.85);
+        box-shadow:
+          0 0 0 3px rgba(212, 255, 50, 0.14),
+          0 0 18px rgba(212, 255, 50, 0.25);
+      }
+
+      .remember-toggle:checked + .remember-track::after {
+        left: 22px;
+        background: #d4ff32;
+      }
+
+      .remember-toggle:focus-visible + .remember-track {
+        outline: 2px solid #d4ff32;
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body
+    class="w-full min-h-screen antialiased selection:bg-primary-500 selection:text-dark-900"
+  >
+    <div class="min-h-screen flex">
+      <!-- Left Side - Login Form -->
+      <div
+        id="login-form-section"
+        class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-8 lg:p-12 relative"
+      >
+        <!-- Background decoration -->
+        <div
+          class="absolute top-0 left-0 w-1/2 h-1/2 opacity-10 pointer-events-none"
+          style="
+            background: radial-gradient(
+              circle at top left,
+              #d4ff32 0%,
+              transparent 60%
+            );
+          "
+        ></div>
+
+        <div class="w-full max-w-md relative z-10">
+          <!-- Logo -->
+          <a href="./index.html" class="flex items-center gap-2 mb-12">
+            <div
+              class="w-10 h-10 rounded-lg bg-primary-500 flex items-center justify-center text-dark-900 font-bold text-xl"
+            >
+              <i class="fa-solid fa-code"></i>
+            </div>
+            <span class="text-2xl font-bold tracking-tight"
+              >CUFCAI <span class="text-primary-500">Learn</span></span
+            >
+          </a>
+
+          <!-- Welcome Text -->
+          <div class="mb-10">
+            <h1 class="text-3xl sm:text-4xl font-bold mb-3">Welcome Back</h1>
+            <p class="text-gray-400">
+              Sign in to access your learning materials and continue your
+              journey.
+            </p>
+          </div>
+
+          <!-- Login Form -->
+          <form id="login-form" class="space-y-6">
+            <!-- Email Input -->
+            <div>
+              <label
+                for="email"
+                class="block text-sm font-medium mb-2 text-gray-300"
+                >University Email</label
+              >
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400"
+                >
+                  <i class="fa-regular fa-envelope"></i>
+                </div>
+                <input
+                  type="email"
+                  id="email"
+                  class="input-field w-full pl-12 pr-4 py-3.5 rounded-xl text-white placeholder-gray-500"
+                  placeholder="your.name@fci-cu.edu.eg"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+              <div
+                id="email-error"
+                class="email-error-popup rounded-lg border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-200"
+                role="alert"
+                aria-live="polite"
+              >
+                <div class="flex items-start gap-2">
+                  <i
+                    class="fa-solid fa-circle-exclamation mt-0.5 text-red-300"
+                  ></i>
+                  <span>Please enter a valid email address.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Password Input -->
+            <div>
+              <label
+                for="password"
+                class="block text-sm font-medium mb-2 text-gray-300"
+                >Password</label
+              >
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400"
+                >
+                  <i class="fa-solid fa-lock"></i>
+                </div>
+                <input
+                  type="password"
+                  id="password"
+                  class="input-field w-full pl-12 pr-12 py-3.5 rounded-xl text-white placeholder-gray-500"
+                  placeholder="Enter your password"
+                  required
+                />
+                <button
+                  type="button"
+                  class="toggle-password-btn absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-white transition-colors"
+                  data-target="password"
+                  aria-label="Toggle password visibility"
+                >
+                  <i class="fa-regular fa-eye"></i>
+                </button>
+              </div>
+              <div
+                id="password-error"
+                class="password-error-popup rounded-lg border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-200"
+                role="alert"
+                aria-live="polite"
+              >
+                <div class="flex items-start gap-2">
+                  <i
+                    class="fa-solid fa-circle-exclamation mt-0.5 text-red-300"
+                  ></i>
+                  <span id="password-error-text"
+                    >Incorrect password. Please try again.</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Remember Me & Forgot Password -->
+            <div class="flex items-center justify-between text-sm">
+              <label
+                for="remember-me"
+                class="flex items-center gap-3 cursor-pointer group select-none"
+              >
+                <input
+                  type="checkbox"
+                  id="remember-me"
+                  class="remember-toggle"
+                />
+                <span class="remember-track" aria-hidden="true"></span>
+                <span
+                  class="text-gray-300 group-hover:text-white transition-colors font-medium"
+                  >Remember me</span
+                >
+              </label>
+              <a
+                href="#"
+                class="text-primary-500 hover:text-primary-600 font-medium transition-colors"
+                >Forgot password?</a
+              >
+            </div>
+
+            <!-- Login Button -->
+            <button
+              type="submit"
+              class="w-full bg-primary-500 text-dark-900 py-4 rounded-xl font-bold text-lg hover:bg-primary-600 transition-all shadow-[0_0_20px_rgba(212,255,50,0.2)] hover:shadow-[0_0_30px_rgba(212,255,50,0.3)]"
+            >
+              Sign In
+            </button>
+
+            <!-- Divider -->
+            <div class="relative my-8">
+              <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-dark-700"></div>
+              </div>
+              <div class="relative flex justify-center text-sm">
+                <span class="px-4 bg-dark-900 text-gray-400"
+                  >Or continue with</span
+                >
+              </div>
+            </div>
+
+            <!-- Social Login -->
+            <div class="grid grid-cols-2 gap-4">
+              <button
+                type="button"
+                class="glass-panel border border-dark-700 py-3 rounded-xl font-medium hover:border-primary-500/50 transition-all flex items-center justify-center gap-2"
+              >
+                <i class="fa-brands fa-google text-lg"></i>
+                <span>Google</span>
+              </button>
+              <button
+                type="button"
+                class="glass-panel border border-dark-700 py-3 rounded-xl font-medium hover:border-primary-500/50 transition-all flex items-center justify-center gap-2"
+              >
+                <i class="fa-brands fa-microsoft text-lg"></i>
+                <span>Microsoft</span>
+              </button>
+            </div>
+          </form>
+
+          <!-- Sign Up Link -->
+          <p class="text-center text-gray-400 text-sm mt-8">
+            Don't have an account?
+            <a
+              href="./createAccountPage.html"
+              class="text-primary-500 hover:text-primary-600 font-semibold transition-colors"
+              >Create one now</a
+            >
+          </p>
+
+          <!-- Help Link -->
+          <div class="mt-8 text-center">
+            <a
+              href="#"
+              class="text-sm text-gray-500 hover:text-gray-400 transition-colors inline-flex items-center gap-2"
+            >
+              <i class="fa-regular fa-circle-question"></i>
+              Need help signing in?
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side - Visual/Info Panel -->
+      <div
+        id="visual-panel"
+        class="hidden lg:flex lg:w-1/2 relative overflow-hidden"
+      >
+        <!-- Background gradient -->
+        <div
+          class="absolute inset-0 bg-gradient-to-br from-dark-800 via-dark-900 to-dark-900"
+        ></div>
+        <div
+          class="absolute top-0 right-0 w-3/4 h-3/4 opacity-30"
+          style="
+            background: radial-gradient(
+              circle at top right,
+              #8a2be2 0%,
+              transparent 70%
+            );
+          "
+        ></div>
+        <div
+          class="absolute bottom-0 left-0 w-2/3 h-2/3 opacity-20"
+          style="
+            background: radial-gradient(
+              circle at bottom left,
+              #d4ff32 0%,
+              transparent 70%
+            );
+          "
+        ></div>
+
+        <!-- Content -->
+        <div class="relative z-10 flex flex-col justify-center px-12 xl:px-20">
+          <!-- Animated floating card -->
+          <div
+            class="glass-panel rounded-3xl p-8 border border-dark-700 mb-12 transform hover:scale-105 transition-transform duration-300"
+          >
+            <div class="flex items-center gap-4 mb-6">
+              <div
+                class="w-14 h-14 rounded-xl bg-primary-500/20 flex items-center justify-center text-primary-500 text-2xl"
+              >
+                <i class="fa-solid fa-graduation-cap"></i>
+              </div>
+              <div>
+                <div class="text-sm text-gray-400">Active Students</div>
+                <div class="text-2xl font-bold">2,000+</div>
+              </div>
+            </div>
+            <div class="h-2 bg-dark-700 rounded-full overflow-hidden">
+              <div
+                class="h-full bg-gradient-to-r from-primary-500 to-accent-purple rounded-full"
+                style="width: 78%"
+              ></div>
+            </div>
+            <div class="text-xs text-gray-400 mt-2">
+              78% course completion rate
+            </div>
+          </div>
+
+          <!-- Main text -->
+          <h2 class="text-4xl xl:text-5xl font-bold mb-6 leading-tight">
+            Your Journey to <br />
+            <span class="gradient-text">Academic Excellence</span>
+          </h2>
+          <p class="text-gray-400 text-lg mb-10 leading-relaxed max-w-lg">
+            Access comprehensive study materials, video lectures, and
+            interactive quizzes designed specifically for Cairo University
+            Computer Science curriculum.
+          </p>
+
+          <!-- Feature list -->
+          <div class="space-y-4">
+            <div class="flex items-center gap-4">
+              <div
+                class="w-10 h-10 rounded-full bg-primary-500/10 flex items-center justify-center text-primary-500"
+              >
+                <i class="fa-solid fa-check"></i>
+              </div>
+              <span class="text-gray-300">Organized by semester and year</span>
+            </div>
+            <div class="flex items-center gap-4">
+              <div
+                class="w-10 h-10 rounded-full bg-primary-500/10 flex items-center justify-center text-primary-500"
+              >
+                <i class="fa-solid fa-check"></i>
+              </div>
+              <span class="text-gray-300">Interactive coding environment</span>
+            </div>
+            <div class="flex items-center gap-4">
+              <div
+                class="w-10 h-10 rounded-full bg-primary-500/10 flex items-center justify-center text-primary-500"
+              >
+                <i class="fa-solid fa-check"></i>
+              </div>
+              <span class="text-gray-300">Collaborative study groups</span>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div
+            class="grid grid-cols-3 gap-6 mt-12 pt-12 border-t border-dark-700"
+          >
+            <div>
+              <div class="text-3xl font-bold text-primary-500 mb-1">150+</div>
+              <div class="text-sm text-gray-400">Video Lectures</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-primary-500 mb-1">40+</div>
+              <div class="text-sm text-gray-400">Subjects Covered</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-primary-500 mb-1">24/7</div>
+              <div class="text-sm text-gray-400">Access Available</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Decorative elements -->
+        <div
+          class="absolute top-20 right-20 w-32 h-32 rounded-full border border-primary-500/20 animate-pulse"
+          style="animation-duration: 3s"
+        ></div>
+        <div
+          class="absolute bottom-32 right-32 w-20 h-20 rounded-full border border-accent-purple/20 animate-pulse"
+          style="animation-duration: 4s"
+        ></div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        // Password visibility toggle
+        const toggleButtons = document.querySelectorAll(".toggle-password-btn");
+        toggleButtons.forEach((btn) => {
+          btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute("data-target");
+            const input = document.getElementById(targetId);
+            const icon = this.querySelector("i");
+
+            if (input.type === "password") {
+              input.type = "text";
+              icon.classList.remove("fa-eye");
+              icon.classList.add("fa-eye-slash");
+            } else {
+              input.type = "password";
+              icon.classList.remove("fa-eye-slash");
+              icon.classList.add("fa-eye");
+            }
+          });
+        });
+      })();
+    </script>
+
+    <script>
+      (function () {
+        const form = document.getElementById("login-form");
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const emailError = document.getElementById("email-error");
+        const passwordError = document.getElementById("password-error");
+        const passwordErrorText = document.getElementById(
+          "password-error-text",
+        );
+
+        if (
+          !form ||
+          !emailInput ||
+          !passwordInput ||
+          !emailError ||
+          !passwordError ||
+          !passwordErrorText
+        )
+          return;
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        function showEmailError() {
+          emailInput.classList.add("input-error");
+          emailInput.setAttribute("aria-invalid", "true");
+          emailError.classList.add("show");
+        }
+
+        function hideEmailError() {
+          emailInput.classList.remove("input-error");
+          emailInput.removeAttribute("aria-invalid");
+          emailError.classList.remove("show");
+        }
+
+        function isEmailValid(value) {
+          return emailRegex.test((value || "").trim());
+        }
+
+        function showPasswordError(message) {
+          passwordInput.classList.add("input-error");
+          passwordInput.setAttribute("aria-invalid", "true");
+          passwordErrorText.textContent = message;
+          passwordError.classList.add("show");
+        }
+
+        function hidePasswordError() {
+          passwordInput.classList.remove("input-error");
+          passwordInput.removeAttribute("aria-invalid");
+          passwordError.classList.remove("show");
+        }
+
+        emailInput.addEventListener("input", function () {
+          if (isEmailValid(emailInput.value)) {
+            hideEmailError();
+          }
+        });
+
+        passwordInput.addEventListener("input", hidePasswordError);
+        passwordInput.addEventListener("focus", hidePasswordError);
+
+        emailInput.addEventListener("blur", function () {
+          if (!emailInput.value.trim()) {
+            hideEmailError();
+            return;
+          }
+          if (!isEmailValid(emailInput.value)) {
+            showEmailError();
+          }
+        });
+
+        form.addEventListener("submit", async function (event) {
+          if (!isEmailValid(emailInput.value)) {
+            event.preventDefault();
+            showEmailError();
+            hidePasswordError();
+            emailInput.focus();
+            return;
+          }
+
+          event.preventDefault();
+
+          const submitButton = form.querySelector('button[type="submit"]');
+          const originalButtonText = submitButton
+            ? submitButton.textContent
+            : "";
+          if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = "Signing in...";
+          }
+
+          try {
+            const result = await window.AuthClient.login({
+              email: (emailInput.value || "").trim(),
+              password: passwordInput.value || "",
+            });
+
+            if (result.ok) {
+              hidePasswordError();
+              window.location.href = "./dashboard.html";
+              return;
+            }
+
+            const message =
+              (result.data && result.data.message) ||
+              "Invalid email or password. Please try again.";
+            showPasswordError(message);
+            passwordInput.focus();
+          } catch (_error) {
+            showPasswordError("Could not connect to server. Please try again.");
+            passwordInput.focus();
+          } finally {
+            if (submitButton) {
+              submitButton.disabled = false;
+              submitButton.textContent = originalButtonText;
+            }
+          }
+        });
+      })();
+    </script>
+
+    <script>
+      (function () {
+        function _uxpResizeCharts() {
+          if (window.Plotly) {
+            document
+              .querySelectorAll(".plot-container.plotly")
+              .forEach(function (pc) {
+                var gd = pc.parentElement;
+                if (!gd) return;
+                var rect = gd.getBoundingClientRect();
+                if (rect.width <= 0 || rect.height <= 0) return;
+                try {
+                  window.Plotly.relayout(gd, {
+                    width: Math.round(rect.width),
+                    height: Math.round(rect.height),
+                  });
+                } catch (e) {}
+              });
+          }
+          if (window.ApexCharts && window.Apex && window.Apex._chartInstances) {
+            window.Apex._chartInstances.forEach(function (inst) {
+              try {
+                (inst.chart || inst).updateOptions({}, false, false);
+              } catch (e) {}
+            });
+          }
+          if (window.Chart) {
+            try {
+              Object.values(window.Chart.instances || {}).forEach(function (c) {
+                c.resize();
+              });
+            } catch (e) {}
+          }
+        }
+
+        window.addEventListener("load", function () {
+          setTimeout(function () {
+            _uxpResizeCharts();
+            setTimeout(_uxpResizeCharts, 500);
+          }, 300);
+          try {
+            var _lastW = 0,
+              _lastH = 0,
+              _timer = 0;
+            new ResizeObserver(function () {
+              var w = document.documentElement.clientWidth;
+              var h = document.documentElement.clientHeight;
+              if (w === _lastW && h === _lastH) return;
+              _lastW = w;
+              _lastH = h;
+              clearTimeout(_timer);
+              _timer = setTimeout(_uxpResizeCharts, 150);
+            }).observe(document.documentElement);
+          } catch (e) {}
+        });
+      })();
+    </script>
+  </body>
+</html>

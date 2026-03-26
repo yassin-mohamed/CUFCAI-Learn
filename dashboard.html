@@ -1,0 +1,1055 @@
+﻿<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <script>
+      window.FontAwesomeConfig = {
+        autoReplaceSvg: "nest",
+      };
+    </script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FCAI E-Learning Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.plot.ly/plotly-3.1.1.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <script src="./js/authClient.js"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+            colors: {
+              dark: {
+                900: "#121212",
+                800: "#1e1e1e",
+                700: "#2d2d2d",
+                600: "#3d3d3d",
+              },
+              primary: {
+                500: "#D4FF32",
+                600: "#BBE620",
+              },
+              lime: {
+                400: "#a3e635",
+                500: "#84cc16",
+                600: "#65a30d",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :root {
+        --bg-base: #090b12;
+        --bg-elev: #121722;
+        --bg-elev-soft: rgba(22, 28, 41, 0.72);
+        --line-soft: rgba(255, 255, 255, 0.1);
+        --line-strong: rgba(212, 255, 50, 0.28);
+        --glow-lime: rgba(163, 230, 53, 0.32);
+        --glow-blue: rgba(56, 189, 248, 0.22);
+        --text-soft: #98a2b3;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background:
+          radial-gradient(
+            1200px 700px at 90% -20%,
+            rgba(124, 58, 237, 0.26),
+            transparent 65%
+          ),
+          radial-gradient(
+            900px 600px at -10% 10%,
+            rgba(56, 189, 248, 0.2),
+            transparent 62%
+          ),
+          radial-gradient(
+            760px 520px at 80% 90%,
+            rgba(163, 230, 53, 0.14),
+            transparent 70%
+          ),
+          linear-gradient(160deg, #080b11 0%, #0d121b 45%, #111827 100%);
+        color: #e5e7eb;
+        position: relative;
+        isolation: isolate;
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        width: 40vw;
+        height: 40vw;
+        border-radius: 999px;
+        filter: blur(72px);
+        opacity: 0.22;
+        z-index: -1;
+        pointer-events: none;
+        animation: floatGlow 14s ease-in-out infinite;
+      }
+
+      body::before {
+        top: -12vw;
+        right: -8vw;
+        background: var(--glow-blue);
+      }
+
+      body::after {
+        bottom: -16vw;
+        left: -10vw;
+        background: var(--glow-lime);
+        animation-delay: -5s;
+      }
+
+      @keyframes floatGlow {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        50% {
+          transform: translate3d(0, -18px, 0) scale(1.07);
+        }
+      }
+
+      #sidebar,
+      #header,
+      #footer {
+        background: linear-gradient(
+          180deg,
+          rgba(16, 21, 32, 0.9) 0%,
+          rgba(14, 18, 28, 0.82) 100%
+        ) !important;
+        backdrop-filter: blur(14px);
+        border-color: var(--line-soft) !important;
+      }
+
+      #stats-grid > div,
+      #enrolled-courses,
+      #performance-chart,
+      #newsletter-widget,
+      #tasks-widget {
+        background: linear-gradient(
+          155deg,
+          rgba(30, 37, 53, 0.82) 0%,
+          rgba(20, 26, 38, 0.75) 100%
+        ) !important;
+        border: 1px solid var(--line-soft) !important;
+        box-shadow:
+          0 14px 40px rgba(2, 6, 23, 0.45),
+          inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(8px);
+      }
+
+      #stats-grid > div,
+      #enrolled-courses,
+      #performance-chart,
+      #newsletter-widget,
+      #tasks-widget,
+      #welcome-section button {
+        transition:
+          transform 0.28s ease,
+          box-shadow 0.28s ease,
+          border-color 0.28s ease,
+          background-color 0.28s ease;
+      }
+
+      #stats-grid > div:hover,
+      #enrolled-courses:hover,
+      #performance-chart:hover,
+      #newsletter-widget:hover,
+      #tasks-widget:hover {
+        transform: translateY(-3px);
+        border-color: var(--line-strong) !important;
+        box-shadow:
+          0 22px 52px rgba(2, 6, 23, 0.6),
+          0 0 0 1px rgba(163, 230, 53, 0.18),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+
+      .bg-dark-700,
+      [class*="bg-dark-700/50"] {
+        background-color: rgba(35, 43, 60, 0.72) !important;
+      }
+
+      #header input,
+      #performance-chart select {
+        background: rgba(18, 24, 36, 0.76) !important;
+        border-color: rgba(148, 163, 184, 0.26) !important;
+      }
+
+      #header input:focus,
+      #performance-chart select:focus {
+        box-shadow: 0 0 0 3px rgba(163, 230, 53, 0.22);
+      }
+
+      #welcome-section p,
+      #footer .text-gray-500,
+      #footer .text-gray-400,
+      #enrolled-courses .text-gray-400,
+      #tasks-widget .text-gray-400 {
+        color: var(--text-soft) !important;
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0f1623;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #2f3b51;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #6a8f26;
+      }
+
+      @media (max-width: 768px) {
+        body::before,
+        body::after {
+          width: 60vw;
+          height: 60vw;
+          filter: blur(56px);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        body::before,
+        body::after {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="bg-dark-900 text-gray-200 min-h-screen w-full overflow-x-hidden flex flex-col md:flex-row m-0 p-0"
+  >
+    <!-- Sidebar -->
+    <aside
+      id="sidebar"
+      class="w-full md:w-64 bg-dark-800 border-r border-dark-700 flex-shrink-0 flex flex-col h-auto md:h-screen sticky top-0 z-50 transition-all duration-300"
+    >
+      <div
+        class="p-6 flex items-center justify-between md:justify-center border-b border-dark-700"
+      >
+        <a href="./index.html" class="flex items-center gap-2">
+          <div
+            class="w-8 h-8 rounded bg-primary-500 flex items-center justify-center text-dark-900 font-bold text-xl"
+          >
+            <i class="fa-solid fa-code"></i>
+          </div>
+          <span class="text-xl font-bold tracking-tight text-white"
+            >CUFCAI <span class="text-primary-500">Learn</span></span
+          >
+        </a>
+        <button
+          id="mobile-menu-btn"
+          class="md:hidden text-gray-400 hover:text-white"
+        >
+          <i class="fa-solid fa-bars text-2xl"></i>
+        </button>
+      </div>
+
+      <nav
+        id="nav-menu"
+        class="hidden md:flex flex-col gap-2 p-4 flex-grow overflow-y-auto"
+      >
+        <a
+          href="#"
+          class="flex items-center gap-4 px-4 py-3 rounded-xl bg-lime-500/10 text-lime-400 font-medium transition-colors"
+        >
+          <i class="fa-solid fa-house w-5 text-center"></i>
+          <span>Dashboard</span>
+        </a>
+        <a
+          href="#"
+          class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-dark-700 font-medium transition-colors"
+        >
+          <i class="fa-solid fa-book w-5 text-center"></i>
+          <span>My Courses</span>
+        </a>
+        <a
+          href="#"
+          class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-dark-700 font-medium transition-colors"
+        >
+          <i class="fa-solid fa-calendar-days w-5 text-center"></i>
+          <span>Schedule</span>
+        </a>
+        <a
+          href="#"
+          class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-dark-700 font-medium transition-colors"
+        >
+          <i class="fa-solid fa-clipboard-list w-5 text-center"></i>
+          <span>Assignments</span>
+          <span
+            class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full"
+            >3</span
+          >
+        </a>
+        <a
+          href="#"
+          class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-dark-700 font-medium transition-colors"
+        >
+          <i class="fa-solid fa-chart-simple w-5 text-center"></i>
+          <span>Grades</span>
+        </a>
+
+        <div
+          class="mt-8 mb-2 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider"
+        >
+          Features (Coming Soon)
+        </div>
+        <a
+          href="#"
+          class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-500 hover:text-gray-300 font-medium transition-colors opacity-70 cursor-not-allowed"
+        >
+          <i class="fa-solid fa-users w-5 text-center"></i>
+          <span>Study Groups</span>
+          <i class="fa-solid fa-lock ml-auto text-xs"></i>
+        </a>
+        <a
+          href="#"
+          class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-500 hover:text-gray-300 font-medium transition-colors opacity-70 cursor-not-allowed"
+        >
+          <i class="fa-solid fa-comments w-5 text-center"></i>
+          <span>Discussion Forum</span>
+          <i class="fa-solid fa-lock ml-auto text-xs"></i>
+        </a>
+        <a
+          href="#"
+          class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-500 hover:text-gray-300 font-medium transition-colors opacity-70 cursor-not-allowed"
+        >
+          <i class="fa-solid fa-briefcase w-5 text-center"></i>
+          <span>Career Hub</span>
+          <i class="fa-solid fa-lock ml-auto text-xs"></i>
+        </a>
+      </nav>
+
+      <div class="hidden md:block p-4 mt-auto border-t border-dark-700">
+        <a
+          href="#"
+          class="flex items-center gap-4 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-dark-700 font-medium transition-colors"
+        >
+          <i class="fa-solid fa-gear w-5 text-center"></i>
+          <span>Settings</span>
+        </a>
+        <a
+          href="#"
+          id="logout-link"
+          class="flex items-center gap-4 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-400/10 font-medium transition-colors mt-2"
+        >
+          <i class="fa-solid fa-arrow-right-from-bracket w-5 text-center"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-screen overflow-y-auto bg-dark-900">
+      <!-- Header -->
+      <header
+        id="header"
+        class="bg-dark-800/80 backdrop-blur-md border-b border-dark-700 sticky top-0 z-40 px-6 py-4 flex items-center justify-between"
+      >
+        <div class="flex-1 max-w-xl hidden md:block">
+          <div class="relative">
+            <i
+              class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+            ></i>
+            <input
+              type="text"
+              placeholder="Search courses, assignments..."
+              class="w-full bg-dark-700 text-white rounded-full py-2.5 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-lime-500 border border-dark-600 transition-all"
+            />
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4 ml-auto">
+          <button
+            class="relative p-2 text-gray-400 hover:text-white transition-colors rounded-full hover:bg-dark-700"
+          >
+            <i class="fa-regular fa-bell text-xl"></i>
+            <span
+              class="absolute top-1 right-1 w-2.5 h-2.5 bg-lime-500 rounded-full border-2 border-dark-800"
+            ></span>
+          </button>
+          <button
+            class="p-2 text-gray-400 hover:text-white transition-colors rounded-full hover:bg-dark-700"
+          >
+            <i class="fa-regular fa-envelope text-xl"></i>
+          </button>
+          <div class="h-8 w-px bg-dark-700 mx-2"></div>
+          <div
+            class="flex items-center gap-3 cursor-pointer hover:bg-dark-700 p-1.5 rounded-full pr-4 transition-colors"
+          >
+            <img
+              src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg"
+              alt="Student Profile"
+              class="w-9 h-9 rounded-full object-cover border-2 border-lime-500"
+            />
+            <div class="hidden sm:block">
+              <p class="text-sm font-semibold text-white">Yassin Mohamed</p>
+              <p class="text-xs text-gray-400">Cyber Security Department</p>
+            </div>
+            <i
+              class="fa-solid fa-chevron-down text-xs text-gray-400 ml-2 hidden sm:block"
+            ></i>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Content -->
+      <div class="p-6 md:p-8 flex-1 max-w-7xl mx-auto w-full">
+        <!-- Welcome Section -->
+        <section
+          id="welcome-section"
+          class="flex flex-col md:flex-row gap-6 justify-between items-start md:items-center mb-8"
+        >
+          <div>
+            <h2 class="text-3xl font-bold text-white mb-2">
+              Welcome back, Yassin Mo.
+            </h2>
+            <p class="text-gray-400">
+              Here's your academic overview for the Fall Semester 2026.
+            </p>
+          </div>
+          <div class="flex gap-3 w-full md:w-auto">
+            <button
+              class="flex-1 md:flex-none bg-dark-700 hover:bg-dark-600 text-white px-5 py-2.5 rounded-xl font-medium transition-colors border border-dark-600 flex items-center justify-center gap-2"
+            >
+              <i class="fa-solid fa-download"></i> Transcript
+            </button>
+            <button
+              class="flex-1 md:flex-none bg-lime-500 hover:bg-lime-400 text-dark-900 px-5 py-2.5 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-lime-500/20"
+            >
+              <i class="fa-solid fa-plus"></i> Register Course
+            </button>
+          </div>
+        </section>
+
+        <!-- Stats Grid -->
+        <section
+          id="stats-grid"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+        >
+          <!-- GPA Card -->
+          <div
+            class="bg-dark-800 rounded-2xl p-6 border border-dark-700 relative overflow-hidden group"
+          >
+            <div
+              class="absolute -right-4 -top-4 w-24 h-24 bg-lime-500/10 rounded-full blur-xl group-hover:bg-lime-500/20 transition-all"
+            ></div>
+            <div class="flex justify-between items-start mb-4 relative z-10">
+              <div>
+                <p class="text-gray-400 text-sm font-medium mb-1">
+                  Cumulative GPA
+                </p>
+                <h3 class="text-3xl font-bold text-white">
+                  3.84<span class="text-lg text-gray-500 font-normal"
+                    >/4.0</span
+                  >
+                </h3>
+              </div>
+              <div
+                class="w-12 h-12 rounded-xl bg-lime-500/10 flex items-center justify-center text-lime-400"
+              >
+                <i class="fa-solid fa-award text-xl"></i>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 text-sm relative z-10">
+              <span class="text-lime-400 flex items-center gap-1"
+                ><i class="fa-solid fa-arrow-trend-up"></i> +0.12</span
+              >
+              <span class="text-gray-500">from last semester</span>
+            </div>
+          </div>
+
+          <!-- Credits Card -->
+          <div class="bg-dark-800 rounded-2xl p-6 border border-dark-700">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <p class="text-gray-400 text-sm font-medium mb-1">
+                  Completed Credits
+                </p>
+                <h3 class="text-3xl font-bold text-white">
+                  86<span class="text-lg text-gray-500 font-normal">/144</span>
+                </h3>
+              </div>
+              <div
+                class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400"
+              >
+                <i class="fa-solid fa-layer-group text-xl"></i>
+              </div>
+            </div>
+            <div class="w-full bg-dark-700 rounded-full h-2 mt-4">
+              <div
+                class="bg-blue-500 h-2 rounded-full"
+                style="width: 60%"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Current Courses Card -->
+          <div class="bg-dark-800 rounded-2xl p-6 border border-dark-700">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <p class="text-gray-400 text-sm font-medium mb-1">
+                  Active Courses
+                </p>
+                <h3 class="text-3xl font-bold text-white">6</h3>
+              </div>
+              <div
+                class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400"
+              >
+                <i class="fa-solid fa-book-open text-xl"></i>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 text-sm">
+              <span class="text-gray-400">18 Credit Hours Total</span>
+            </div>
+          </div>
+
+          <!-- Upcoming Deadlines Card -->
+          <div class="bg-dark-800 rounded-2xl p-6 border border-dark-700">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <p class="text-gray-400 text-sm font-medium mb-1">
+                  Upcoming Deadlines
+                </p>
+                <h3 class="text-3xl font-bold text-white">4</h3>
+              </div>
+              <div
+                class="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400"
+              >
+                <i class="fa-regular fa-clock text-xl"></i>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 text-sm">
+              <span class="text-red-400 font-medium">2 within 48 hours</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Main Grid Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          <!-- Left Column (Wider) -->
+          <div class="lg:col-span-2 space-y-8">
+            <!-- Enrolled Courses -->
+            <section
+              id="enrolled-courses"
+              class="bg-dark-800 rounded-2xl border border-dark-700 overflow-hidden"
+            >
+              <div
+                class="p-6 border-b border-dark-700 flex justify-between items-center"
+              >
+                <h3 class="text-xl font-bold text-white">Current Courses</h3>
+                <a
+                  href="#"
+                  class="text-sm text-lime-400 hover:text-lime-300 font-medium"
+                  >View All <i class="fa-solid fa-arrow-right ml-1"></i
+                ></a>
+              </div>
+              <div class="p-6 space-y-4">
+                <!-- Course Item 1 -->
+                <div
+                  class="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-xl bg-dark-700/50 hover:bg-dark-700 transition-colors border border-transparent hover:border-dark-600"
+                >
+                  <div
+                    class="w-14 h-14 rounded-lg bg-gradient-to-br from-lime-500/20 to-green-600/20 flex items-center justify-center text-lime-400 text-xl font-bold flex-shrink-0"
+                  >
+                    AI
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-white font-semibold text-lg">
+                      Artificial Intelligence (CS401)
+                    </h4>
+                    <p class="text-gray-400 text-sm">
+                      Dr. Mohamed Ali â€¢ Mon, Wed 10:00 AM
+                    </p>
+                  </div>
+                  <div
+                    class="w-full sm:w-auto flex items-center gap-4 mt-2 sm:mt-0"
+                  >
+                    <div class="text-right">
+                      <p class="text-sm text-gray-400 mb-1">Progress</p>
+                      <p class="text-white font-medium">75%</p>
+                    </div>
+                    <div class="w-24 bg-dark-900 rounded-full h-2">
+                      <div
+                        class="bg-lime-500 h-2 rounded-full"
+                        style="width: 75%"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Course Item 2 -->
+                <div
+                  class="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-xl bg-dark-700/50 hover:bg-dark-700 transition-colors border border-transparent hover:border-dark-600"
+                >
+                  <div
+                    class="w-14 h-14 rounded-lg bg-gradient-to-br from-blue-500/20 to-indigo-600/20 flex items-center justify-center text-blue-400 text-xl font-bold flex-shrink-0"
+                  >
+                    DB
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-white font-semibold text-lg">
+                      Database Systems (IS302)
+                    </h4>
+                    <p class="text-gray-400 text-sm">
+                      Dr. Sarah Ahmed â€¢ Tue, Thu 12:30 PM
+                    </p>
+                  </div>
+                  <div
+                    class="w-full sm:w-auto flex items-center gap-4 mt-2 sm:mt-0"
+                  >
+                    <div class="text-right">
+                      <p class="text-sm text-gray-400 mb-1">Progress</p>
+                      <p class="text-white font-medium">40%</p>
+                    </div>
+                    <div class="w-24 bg-dark-900 rounded-full h-2">
+                      <div
+                        class="bg-blue-500 h-2 rounded-full"
+                        style="width: 40%"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Course Item 3 -->
+                <div
+                  class="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-xl bg-dark-700/50 hover:bg-dark-700 transition-colors border border-transparent hover:border-dark-600"
+                >
+                  <div
+                    class="w-14 h-14 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-600/20 flex items-center justify-center text-purple-400 text-xl font-bold flex-shrink-0"
+                  >
+                    SE
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-white font-semibold text-lg">
+                      Software Engineering (CS305)
+                    </h4>
+                    <p class="text-gray-400 text-sm">
+                      Dr. Kareem Youssef â€¢ Mon 02:00 PM
+                    </p>
+                  </div>
+                  <div
+                    class="w-full sm:w-auto flex items-center gap-4 mt-2 sm:mt-0"
+                  >
+                    <div class="text-right">
+                      <p class="text-sm text-gray-400 mb-1">Progress</p>
+                      <p class="text-white font-medium">60%</p>
+                    </div>
+                    <div class="w-24 bg-dark-900 rounded-full h-2">
+                      <div
+                        class="bg-purple-500 h-2 rounded-full"
+                        style="width: 60%"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Performance Chart -->
+            <section
+              id="performance-chart"
+              class="bg-dark-800 rounded-2xl border border-dark-700 overflow-hidden"
+            >
+              <div
+                class="p-6 border-b border-dark-700 flex justify-between items-center"
+              >
+                <h3 class="text-xl font-bold text-white">
+                  Academic Performance
+                </h3>
+                <select
+                  class="bg-dark-700 border border-dark-600 text-white text-sm rounded-lg focus:ring-lime-500 focus:border-lime-500 block p-2"
+                >
+                  <option>Last 4 Semesters</option>
+                  <option>All Semesters</option>
+                </select>
+              </div>
+              <div class="p-4">
+                <div id="gpa-chart" class="w-full h-[300px]"></div>
+              </div>
+            </section>
+          </div>
+
+          <!-- Right Column (Narrower) -->
+          <div class="space-y-8">
+            <!-- Faculty Newsletter -->
+            <section
+              id="newsletter-widget"
+              class="bg-gradient-to-b from-dark-800 to-dark-900 rounded-2xl border border-dark-700 overflow-hidden relative"
+            >
+              <div
+                class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-lime-400 to-lime-600"
+              ></div>
+              <div class="p-6">
+                <div class="flex items-center gap-3 mb-6">
+                  <div
+                    class="w-10 h-10 rounded-full bg-lime-500/20 flex items-center justify-center text-lime-400"
+                  >
+                    <i class="fa-regular fa-newspaper text-lg"></i>
+                  </div>
+                  <h3 class="text-xl font-bold text-white">FCAI News</h3>
+                </div>
+
+                <div class="space-y-5">
+                  <div class="group cursor-pointer">
+                    <span class="text-xs font-semibold text-lime-400 mb-1 block"
+                      >TODAY</span
+                    >
+                    <h4
+                      class="text-white font-medium group-hover:text-lime-400 transition-colors line-clamp-2"
+                    >
+                      Registration for Spring 2027 opens next week
+                    </h4>
+                    <p class="text-sm text-gray-400 mt-1 line-clamp-2">
+                      Prepare your schedules! Early registration for seniors
+                      begins on Monday at 9:00 AM.
+                    </p>
+                  </div>
+                  <div class="h-px w-full bg-dark-700"></div>
+                  <div class="group cursor-pointer">
+                    <span class="text-xs font-semibold text-blue-400 mb-1 block"
+                      >YESTERDAY</span
+                    >
+                    <h4
+                      class="text-white font-medium group-hover:text-blue-400 transition-colors line-clamp-2"
+                    >
+                      Hackathon 2026 Winners Announced
+                    </h4>
+                    <p class="text-sm text-gray-400 mt-1 line-clamp-2">
+                      Congratulations to team 'Null Pointers' for winning the
+                      annual FCAI Hackathon.
+                    </p>
+                  </div>
+                  <div class="h-px w-full bg-dark-700"></div>
+                  <div class="group cursor-pointer">
+                    <span
+                      class="text-xs font-semibold text-purple-400 mb-1 block"
+                      >OCT 15</span
+                    >
+                    <h4
+                      class="text-white font-medium group-hover:text-purple-400 transition-colors line-clamp-2"
+                    >
+                      New AI Lab Equipment Installed
+                    </h4>
+                    <p class="text-sm text-gray-400 mt-1 line-clamp-2">
+                      The AI research lab in building B has been upgraded with
+                      new RTX 5090 workstations.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  class="w-full mt-6 py-2.5 rounded-xl border border-dark-600 text-gray-300 hover:text-white hover:bg-dark-700 transition-colors font-medium text-sm"
+                >
+                  View All Announcements
+                </button>
+              </div>
+            </section>
+
+            <!-- Upcoming Tasks -->
+            <section
+              id="tasks-widget"
+              class="bg-dark-800 rounded-2xl border border-dark-700 overflow-hidden"
+            >
+              <div
+                class="p-6 border-b border-dark-700 flex justify-between items-center"
+              >
+                <h3 class="text-xl font-bold text-white">To-Do List</h3>
+                <button
+                  class="text-gray-400 hover:text-lime-400 transition-colors"
+                >
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+              <div class="p-4 space-y-3">
+                <!-- Task 1 -->
+                <label
+                  class="flex items-start gap-3 p-3 rounded-xl hover:bg-dark-700/50 cursor-pointer transition-colors group"
+                >
+                  <div class="relative flex items-center justify-center mt-0.5">
+                    <input
+                      type="checkbox"
+                      class="peer appearance-none w-5 h-5 border-2 border-dark-500 rounded bg-dark-800 checked:bg-lime-500 checked:border-lime-500 transition-all cursor-pointer"
+                    />
+                    <i
+                      class="fa-solid fa-check absolute text-dark-900 text-xs opacity-0 peer-checked:opacity-100 pointer-events-none"
+                    ></i>
+                  </div>
+                  <div>
+                    <p
+                      class="text-white font-medium text-sm group-hover:text-lime-400 transition-colors"
+                    >
+                      Submit AI Project Phase 1
+                    </p>
+                    <p
+                      class="text-xs text-red-400 mt-1 flex items-center gap-1"
+                    >
+                      <i class="fa-regular fa-clock"></i> Due Today, 11:59 PM
+                    </p>
+                  </div>
+                </label>
+
+                <!-- Task 2 -->
+                <label
+                  class="flex items-start gap-3 p-3 rounded-xl hover:bg-dark-700/50 cursor-pointer transition-colors group"
+                >
+                  <div class="relative flex items-center justify-center mt-0.5">
+                    <input
+                      type="checkbox"
+                      class="peer appearance-none w-5 h-5 border-2 border-dark-500 rounded bg-dark-800 checked:bg-lime-500 checked:border-lime-500 transition-all cursor-pointer"
+                    />
+                    <i
+                      class="fa-solid fa-check absolute text-dark-900 text-xs opacity-0 peer-checked:opacity-100 pointer-events-none"
+                    ></i>
+                  </div>
+                  <div>
+                    <p
+                      class="text-white font-medium text-sm group-hover:text-lime-400 transition-colors"
+                    >
+                      Read DB Chapter 4 & 5
+                    </p>
+                    <p
+                      class="text-xs text-gray-400 mt-1 flex items-center gap-1"
+                    >
+                      <i class="fa-regular fa-calendar"></i> Tomorrow, 10:00 AM
+                    </p>
+                  </div>
+                </label>
+
+                <!-- Task 3 -->
+                <label
+                  class="flex items-start gap-3 p-3 rounded-xl hover:bg-dark-700/50 cursor-pointer transition-colors group"
+                >
+                  <div class="relative flex items-center justify-center mt-0.5">
+                    <input
+                      type="checkbox"
+                      class="peer appearance-none w-5 h-5 border-2 border-dark-500 rounded bg-dark-800 checked:bg-lime-500 checked:border-lime-500 transition-all cursor-pointer"
+                      checked
+                    />
+                    <i
+                      class="fa-solid fa-check absolute text-dark-900 text-xs opacity-0 peer-checked:opacity-100 pointer-events-none"
+                    ></i>
+                  </div>
+                  <div>
+                    <p class="text-gray-500 font-medium text-sm line-through">
+                      SE Midterm Preparation
+                    </p>
+                    <p class="text-xs text-gray-600 mt-1">Completed</p>
+                  </div>
+                </label>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer
+        id="footer"
+        class="bg-dark-800 border-t border-dark-700 py-6 mt-auto"
+      >
+        <div
+          class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4"
+        >
+          <div class="text-gray-500 text-sm">
+            &copy; 2026 Contee Software Property.
+          </div>
+          <div class="flex gap-4 text-sm">
+            <a
+              href="#"
+              class="text-gray-400 hover:text-lime-400 transition-colors"
+              >Help Center</a
+            >
+            <a
+              href="#"
+              class="text-gray-400 hover:text-lime-400 transition-colors"
+              >Privacy Policy</a
+            >
+            <a
+              href="#"
+              class="text-gray-400 hover:text-lime-400 transition-colors"
+              >Terms of Service</a
+            >
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      (function () {
+        window.addEventListener("load", async function () {
+          try {
+            const session = await window.AuthClient.me();
+            if (!session.ok) {
+              window.location.href = "./loginPage.html";
+            }
+          } catch (_error) {
+            window.location.href = "./loginPage.html";
+          }
+        });
+
+        const logoutLink = document.getElementById("logout-link");
+        if (logoutLink) {
+          logoutLink.addEventListener("click", async function (event) {
+            event.preventDefault();
+            try {
+              await window.AuthClient.logout();
+            } catch (_error) {
+            } finally {
+              window.location.href = "./loginPage.html";
+            }
+          });
+        }
+      })();
+
+      // Mobile menu toggle
+      document
+        .getElementById("mobile-menu-btn")
+        .addEventListener("click", function () {
+          const navMenu = document.getElementById("nav-menu");
+          navMenu.classList.toggle("hidden");
+          navMenu.classList.toggle("flex");
+        });
+
+      // Plotly Chart Initialization
+      window.addEventListener("load", function () {
+        try {
+          const gpaData = [
+            {
+              x: ["Fall 24", "Spring 25", "Fall 25", "Spring 26"],
+              y: [3.4, 3.6, 3.75, 3.84],
+              type: "scatter",
+              mode: "lines+markers",
+              line: {
+                color: "#a3e635",
+                width: 3,
+              },
+              marker: {
+                color: "#a3e635",
+                size: 8,
+                line: {
+                  color: "#1e1e1e",
+                  width: 2,
+                },
+              },
+              fill: "tozeroy",
+              fillcolor: "rgba(163, 230, 53, 0.1)",
+            },
+          ];
+
+          const layout = {
+            paper_bgcolor: "transparent",
+            plot_bgcolor: "transparent",
+            margin: { t: 20, r: 20, b: 40, l: 40 },
+            xaxis: {
+              showgrid: false,
+              color: "#9ca3af",
+              tickfont: { family: "Inter, sans-serif" },
+            },
+            yaxis: {
+              showgrid: true,
+              gridcolor: "#3d3d3d",
+              color: "#9ca3af",
+              range: [2.0, 4.0],
+              dtick: 0.5,
+              tickfont: { family: "Inter, sans-serif" },
+            },
+            hovermode: "closest",
+          };
+
+          const config = {
+            responsive: true,
+            displayModeBar: false,
+            displaylogo: false,
+          };
+
+          Plotly.newPlot("gpa-chart", gpaData, layout, config);
+        } catch (e) {
+          console.error("Error loading chart:", e);
+          document.getElementById("gpa-chart").innerHTML =
+            '<div class="flex items-center justify-center h-full text-gray-500">Chart loading failed</div>';
+        }
+      });
+    </script>
+
+    <script>
+      (function () {
+        function _uxpResizeCharts() {
+          if (window.Plotly) {
+            document
+              .querySelectorAll(".plot-container.plotly")
+              .forEach(function (pc) {
+                var gd = pc.parentElement;
+                if (!gd) return;
+                var rect = gd.getBoundingClientRect();
+                if (rect.width <= 0 || rect.height <= 0) return;
+                try {
+                  window.Plotly.relayout(gd, {
+                    width: Math.round(rect.width),
+                    height: Math.round(rect.height),
+                  });
+                } catch (e) {}
+              });
+          }
+          if (window.ApexCharts && window.Apex && window.Apex._chartInstances) {
+            window.Apex._chartInstances.forEach(function (inst) {
+              try {
+                (inst.chart || inst).updateOptions({}, false, false);
+              } catch (e) {}
+            });
+          }
+          if (window.Chart) {
+            try {
+              Object.values(window.Chart.instances || {}).forEach(function (c) {
+                c.resize();
+              });
+            } catch (e) {}
+          }
+        }
+
+        window.addEventListener("load", function () {
+          setTimeout(function () {
+            _uxpResizeCharts();
+            setTimeout(_uxpResizeCharts, 500);
+          }, 300);
+          try {
+            var _lastW = 0,
+              _lastH = 0,
+              _timer = 0;
+            new ResizeObserver(function () {
+              var w = document.documentElement.clientWidth;
+              var h = document.documentElement.clientHeight;
+              if (w === _lastW && h === _lastH) return;
+              _lastW = w;
+              _lastH = h;
+              clearTimeout(_timer);
+              _timer = setTimeout(_uxpResizeCharts, 150);
+            }).observe(document.documentElement);
+          } catch (e) {}
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <script>
+      window.FontAwesomeConfig = {
+        autoReplaceSvg: "nest",
+      };
+    </script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+            colors: {
+              dark: {
+                900: "#0F1115",
+                800: "#1A1D24",
+                700: "#262A33",
+                600: "#3A3F4C",
+              },
+              primary: {
+                500: "#D4FF32",
+                600: "#BBE620",
+              },
+              accent: {
+                purple: "#8A2BE2",
+                blue: "#4169E1",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: #0f1115;
+        color: #fff;
+      }
+
+      .bg-orb {
+        position: absolute;
+        border-radius: 9999px;
+        pointer-events: none;
+        filter: blur(70px);
+        transform: translate3d(0, 0, 0);
+        animation: orbFloat 14s ease-in-out infinite;
+      }
+
+      .bg-orb-purple {
+        top: -180px;
+        right: -140px;
+        width: 520px;
+        height: 520px;
+        background: radial-gradient(
+          circle,
+          rgba(138, 43, 226, 0.42) 0%,
+          rgba(65, 105, 225, 0.2) 45%,
+          rgba(15, 17, 21, 0) 75%
+        );
+        animation-delay: -2s;
+      }
+
+      .bg-orb-green {
+        bottom: -220px;
+        left: -160px;
+        width: 560px;
+        height: 560px;
+        background: radial-gradient(
+          circle,
+          rgba(212, 255, 50, 0.34) 0%,
+          rgba(187, 230, 32, 0.2) 42%,
+          rgba(15, 17, 21, 0) 74%
+        );
+        animation-duration: 17s;
+      }
+
+      .bg-orb-center {
+        top: 28%;
+        left: 42%;
+        width: 380px;
+        height: 380px;
+        background: radial-gradient(
+          circle,
+          rgba(58, 63, 76, 0.3) 0%,
+          rgba(15, 17, 21, 0) 72%
+        );
+        filter: blur(52px);
+        animation-duration: 20s;
+        animation-delay: -6s;
+      }
+
+      @keyframes orbFloat {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        50% {
+          transform: translate3d(0, -14px, 0) scale(1.04);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .bg-orb {
+          animation: none;
+        }
+      }
+
+      .mesh-overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          radial-gradient(
+            circle at 20% 20%,
+            rgba(255, 255, 255, 0.04),
+            transparent 35%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            rgba(255, 255, 255, 0.03),
+            transparent 38%
+          );
+        mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.8),
+          transparent 95%
+        );
+      }
+
+      .glass-panel {
+        background: rgba(26, 29, 36, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+      }
+
+      .input-field {
+        background: rgba(26, 29, 36, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        transition: all 0.25s ease;
+      }
+
+      .input-field:focus {
+        background: rgba(26, 29, 36, 0.8);
+        border-color: #d4ff32;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(212, 255, 50, 0.12);
+      }
+
+      .input-field.input-error {
+        border-color: rgba(248, 113, 113, 0.85);
+        box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.18);
+      }
+
+      .strength-track {
+        width: 100%;
+        height: 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.09);
+        overflow: hidden;
+      }
+
+      .strength-fill {
+        height: 100%;
+        width: 0;
+        border-radius: 999px;
+        transition:
+          width 0.25s ease,
+          background-color 0.25s ease;
+      }
+
+      .criteria-item {
+        color: #9ca3af;
+        transition: color 0.2s ease;
+      }
+
+      .criteria-item.ok {
+        color: #d4ff32;
+      }
+
+      .match-message {
+        min-height: 22px;
+      }
+
+      .match-message.error {
+        color: #fca5a5;
+      }
+
+      .match-message.ok {
+        color: #bef264;
+      }
+    </style>
+    <script src="./js/authClient.js"></script>
+  </head>
+  <body
+    class="w-full min-h-screen antialiased selection:bg-primary-500 selection:text-dark-900"
+  >
+    <main
+      class="min-h-screen relative overflow-hidden flex items-center justify-center p-6 sm:p-8"
+    >
+      <div class="bg-orb bg-orb-purple"></div>
+      <div class="bg-orb bg-orb-green"></div>
+      <div class="bg-orb bg-orb-center"></div>
+      <div class="mesh-overlay"></div>
+
+      <section
+        class="w-full max-w-5xl grid lg:grid-cols-2 gap-8 items-stretch relative z-10"
+      >
+        <div
+          class="glass-panel rounded-3xl p-6 sm:p-8 md:p-10 border border-dark-700 shadow-2xl"
+        >
+          <a href="./index.html" class="flex items-center gap-2 mb-8">
+            <div
+              class="w-10 h-10 rounded-lg bg-primary-500 flex items-center justify-center text-dark-900 text-xl font-bold"
+            >
+              <i class="fa-solid fa-code"></i>
+            </div>
+            <span class="text-2xl font-bold tracking-tight"
+              >CUFCAI <span class="text-primary-500">Learn</span></span
+            >
+          </a>
+
+          <h1 class="text-3xl sm:text-4xl font-bold mb-2">
+            Create your account
+          </h1>
+          <p class="text-gray-400 mb-8">
+            Minimal setup, smooth start. Join the learning platform in seconds.
+          </p>
+
+          <form id="create-account-form" class="space-y-4" novalidate>
+            <div>
+              <label for="full-name" class="block text-sm text-gray-300 mb-2"
+                >Full Name</label
+              >
+              <input
+                id="full-name"
+                type="text"
+                class="input-field w-full rounded-xl px-4 py-3 text-white placeholder-gray-500"
+                placeholder="Your full name"
+                required
+              />
+            </div>
+
+            <div>
+              <label for="email" class="block text-sm text-gray-300 mb-2"
+                >Email</label
+              >
+              <input
+                id="email"
+                type="email"
+                class="input-field w-full rounded-xl px-4 py-3 text-white placeholder-gray-500"
+                placeholder="name@gmail.com"
+                required
+              />
+            </div>
+
+            <div>
+              <label for="user-id" class="block text-sm text-gray-300 mb-2"
+                >University User ID</label
+              >
+              <input
+                id="user-id"
+                type="text"
+                class="input-field w-full rounded-xl px-4 py-3 text-white placeholder-gray-500"
+                placeholder="Your university ID (e.g., CU-2021001)"
+                required
+              />
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label for="password" class="block text-sm text-gray-300 mb-2"
+                  >Password</label
+                >
+                <div class="relative">
+                  <input
+                    id="password"
+                    type="password"
+                    class="input-field w-full rounded-xl px-4 py-3 pr-12 text-white placeholder-gray-500"
+                    placeholder="Create password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="toggle-password-btn absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white transition-colors"
+                    data-target="password"
+                    aria-label="Toggle password visibility"
+                  >
+                    <i class="fa-regular fa-eye"></i>
+                  </button>
+                </div>
+
+                <div class="mt-3">
+                  <div class="flex items-center justify-between text-xs mb-2">
+                    <span class="text-gray-400">Password strength</span>
+                    <span
+                      id="strength-label"
+                      class="font-semibold text-gray-400"
+                      >Too weak</span
+                    >
+                  </div>
+                  <div class="strength-track">
+                    <div id="strength-fill" class="strength-fill"></div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 mt-3 text-xs">
+                  <div id="rule-length" class="criteria-item">
+                    • 8+ characters
+                  </div>
+                  <div id="rule-upper" class="criteria-item">
+                    • Uppercase letter
+                  </div>
+                  <div id="rule-number" class="criteria-item">• Number</div>
+                  <div id="rule-special" class="criteria-item">
+                    • Special character
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label
+                  for="confirm-password"
+                  class="block text-sm text-gray-300 mb-2"
+                  >Confirm</label
+                >
+                <div class="relative">
+                  <input
+                    id="confirm-password"
+                    type="password"
+                    class="input-field w-full rounded-xl px-4 py-3 pr-12 text-white placeholder-gray-500"
+                    placeholder="Repeat password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="toggle-password-btn absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white transition-colors"
+                    data-target="confirm-password"
+                    aria-label="Toggle password visibility"
+                  >
+                    <i class="fa-regular fa-eye"></i>
+                  </button>
+                </div>
+
+                <p
+                  id="password-match-message"
+                  class="match-message text-xs mt-3 text-gray-500"
+                  aria-live="polite"
+                ></p>
+              </div>
+            </div>
+
+            <label class="flex items-start gap-3 text-sm text-gray-300 pt-1">
+              <input type="checkbox" class="mt-0.5 accent-[#D4FF32]" required />
+              <span>I agree to the Terms and Privacy Policy.</span>
+            </label>
+
+            <button
+              type="submit"
+              class="w-full bg-primary-500 text-dark-900 py-3.5 rounded-xl font-bold hover:bg-primary-600 transition-all shadow-[0_0_20px_rgba(212,255,50,0.25)]"
+            >
+              Create Account
+            </button>
+            <p
+              id="register-error"
+              class="hidden text-sm text-red-300 bg-red-500/10 border border-red-400/40 rounded-xl px-3 py-2"
+              aria-live="polite"
+            ></p>
+          </form>
+
+          <p class="text-sm text-gray-400 text-center mt-6">
+            Already have an account?
+            <a
+              href="./loginPage.html"
+              class="text-primary-500 hover:text-primary-600 font-semibold"
+              >Log in</a
+            >
+          </p>
+        </div>
+
+        <aside
+          class="hidden lg:flex glass-panel rounded-3xl p-10 border border-dark-700 flex-col justify-between"
+        >
+          <div>
+            <h2 class="text-3xl font-bold leading-tight mb-3">
+              Learn smarter with a clean, focused workspace.
+            </h2>
+            <p class="text-gray-400 mb-5">
+              Access curated FCAI materials, track progress, and collaborate
+              with your batchmates, Directly aligned with Cairo University's
+              curriculum. Slides, summaries, and past papers organized by year
+              and semester.
+            </p>
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex items-center gap-3 text-gray-300">
+              <i class="fa-solid fa-circle-check text-primary-500"></i>
+              <span>Interactive Coding</span>
+            </div>
+            <div class="flex items-center gap-3 text-gray-300">
+              <i class="fa-solid fa-circle-check text-primary-500"></i>
+              <span>Fast, responsive experience</span>
+            </div>
+            <div class="flex items-center gap-3 text-gray-300">
+              <i class="fa-solid fa-circle-check text-primary-500"></i>
+              <span>Organized by year and semester</span>
+            </div>
+            <div class="flex items-center gap-3 text-gray-300">
+              <i class="fa-solid fa-circle-check text-primary-500"></i>
+              <span>Dark UI built for long study sessions</span>
+            </div>
+            <div class="flex items-center gap-3 text-gray-300">
+              <i class="fa-solid fa-circle-check text-primary-500"></i>
+              <span>Up-to-date Newsteller for the Faculty</span>
+            </div>
+            <div class="flex items-center gap-3 text-gray-300">
+              <i class="fa-solid fa-circle-check text-primary-500"></i>
+              <span>Study Groups</span>
+            </div>
+          </div>
+
+          <!-- Recently Joined Section -->
+          <div class="pt-6 border-t border-dark-700/50">
+            <div class="flex items-center gap-2 mb-3">
+              <i class="fa-solid fa-bolt text-primary-500 text-sm"></i>
+              <span
+                class="text-xs font-semibold text-primary-500 uppercase tracking-wider"
+                >Live Activity</span
+              >
+            </div>
+
+            <div class="space-y-2">
+              <!-- Activity Item 1 -->
+              <div
+                class="flex items-center gap-3 px-3 py-2 rounded-lg bg-dark-800/40 hover:bg-dark-800/60 transition-colors"
+              >
+                <div class="flex-shrink-0">
+                  <div
+                    class="w-9 h-9 rounded-full bg-gradient-to-br from-primary-500 to-accent-blue flex items-center justify-center text-xs font-bold text-dark-900"
+                  >
+                    AH
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-medium text-gray-200">Ahmad Hassan</p>
+                  <p class="text-xs text-gray-500">Batch 2027 • Just joined</p>
+                </div>
+              </div>
+
+              <!-- Activity Item 2 -->
+              <div
+                class="flex items-center gap-3 px-3 py-2 rounded-lg bg-dark-800/40 hover:bg-dark-800/60 transition-colors"
+              >
+                <div class="flex-shrink-0">
+                  <div
+                    class="w-9 h-9 rounded-full bg-gradient-to-br from-accent-purple to-primary-500 flex items-center justify-center text-xs font-bold text-white"
+                  >
+                    FM
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-medium text-gray-200">
+                    Fatima Mohamed
+                  </p>
+                  <p class="text-xs text-gray-500">Batch 2027 • 2 mins ago</p>
+                </div>
+              </div>
+
+              <!-- Activity Item 3 -->
+              <div
+                class="flex items-center gap-3 px-3 py-2 rounded-lg bg-dark-800/40 hover:bg-dark-800/60 transition-colors"
+              >
+                <div class="flex-shrink-0">
+                  <div
+                    class="w-9 h-9 rounded-full bg-gradient-to-br from-accent-blue to-accent-purple flex items-center justify-center text-xs font-bold text-white"
+                  >
+                    KA
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-medium text-gray-200">Khaled Ahmed</p>
+                  <p class="text-xs text-gray-500">Batch 2027 • 5 mins ago</p>
+                </div>
+              </div>
+
+              <!-- Activity Item 4 -->
+              <div
+                class="flex items-center gap-3 px-3 py-2 rounded-lg bg-dark-800/40 hover:bg-dark-800/60 transition-colors"
+              >
+                <div class="flex-shrink-0">
+                  <div
+                    class="w-9 h-9 rounded-full bg-gradient-to-br from-primary-500 to-accent-purple flex items-center justify-center text-xs font-bold text-dark-900"
+                  >
+                    SR
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-medium text-gray-200">Sara Rashid</p>
+                  <p class="text-xs text-gray-500">Batch 2027 • 12 mins ago</p>
+                </div>
+              </div>
+
+              <!-- Activity Item 5 -->
+              <div
+                class="flex items-center gap-3 px-3 py-2 rounded-lg bg-dark-800/40 hover:bg-dark-800/60 transition-colors"
+              >
+                <div class="flex-shrink-0">
+                  <div
+                    class="w-9 h-9 rounded-full bg-gradient-to-br from-accent-purple to-blue-500 flex items-center justify-center text-xs font-bold text-white"
+                  >
+                    OM
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-medium text-gray-200">Omar Mansour</p>
+                  <p class="text-xs text-gray-500">Batch 2026 • 18 mins ago</p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="mt-3 p-3 rounded-lg bg-dark-800/30 border border-primary-500/20"
+            >
+              <p class="text-xs text-gray-400 text-center">
+                <span class="text-primary-500 font-semibold">127 students</span>
+                joined this month
+              </p>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        // Password visibility toggle
+        const toggleButtons = document.querySelectorAll(".toggle-password-btn");
+        toggleButtons.forEach((btn) => {
+          btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute("data-target");
+            const input = document.getElementById(targetId);
+            const icon = this.querySelector("i");
+
+            if (input.type === "password") {
+              input.type = "text";
+              icon.classList.remove("fa-eye");
+              icon.classList.add("fa-eye-slash");
+            } else {
+              input.type = "password";
+              icon.classList.remove("fa-eye-slash");
+              icon.classList.add("fa-eye");
+            }
+          });
+        });
+      })();
+    </script>
+
+    <script>
+      (function () {
+        const form = document.getElementById("create-account-form");
+        const passwordInput = document.getElementById("password");
+        const confirmInput = document.getElementById("confirm-password");
+        const fullNameInput = document.getElementById("full-name");
+        const emailInput = document.getElementById("email");
+        const universityIdInput = document.getElementById("user-id");
+        const registerError = document.getElementById("register-error");
+        const strengthFill = document.getElementById("strength-fill");
+        const strengthLabel = document.getElementById("strength-label");
+        const matchMessage = document.getElementById("password-match-message");
+
+        const ruleLength = document.getElementById("rule-length");
+        const ruleUpper = document.getElementById("rule-upper");
+        const ruleNumber = document.getElementById("rule-number");
+        const ruleSpecial = document.getElementById("rule-special");
+
+        if (!form || !passwordInput || !confirmInput) return;
+
+        function hideRegisterError() {
+          registerError.textContent = "";
+          registerError.classList.add("hidden");
+        }
+
+        function showRegisterError(message) {
+          registerError.textContent = message;
+          registerError.classList.remove("hidden");
+        }
+
+        function evaluatePassword(password) {
+          const rules = {
+            length: password.length >= 8,
+            upper: /[A-Z]/.test(password),
+            number: /\d/.test(password),
+            special: /[^A-Za-z0-9]/.test(password),
+          };
+
+          const score = Object.values(rules).filter(Boolean).length;
+          return { rules, score };
+        }
+
+        function updateStrengthUI() {
+          const value = passwordInput.value || "";
+          const { rules, score } = evaluatePassword(value);
+
+          ruleLength.classList.toggle("ok", rules.length);
+          ruleUpper.classList.toggle("ok", rules.upper);
+          ruleNumber.classList.toggle("ok", rules.number);
+          ruleSpecial.classList.toggle("ok", rules.special);
+
+          const levels = [
+            { text: "Too weak", color: "#ef4444", width: "8%" },
+            { text: "Weak", color: "#f97316", width: "28%" },
+            { text: "Fair", color: "#eab308", width: "52%" },
+            { text: "Good", color: "#84cc16", width: "76%" },
+            { text: "Strong", color: "#22c55e", width: "100%" },
+          ];
+
+          const level = levels[Math.max(0, score)];
+          strengthFill.style.width = value ? level.width : "0";
+          strengthFill.style.backgroundColor = value
+            ? level.color
+            : "transparent";
+          strengthLabel.textContent = value ? level.text : "Too weak";
+          strengthLabel.style.color = value ? level.color : "#9ca3af";
+
+          return score >= 3;
+        }
+
+        function updateMatchUI() {
+          const password = passwordInput.value;
+          const confirm = confirmInput.value;
+
+          if (!confirm) {
+            matchMessage.textContent = "";
+            matchMessage.className = "match-message text-xs mt-3 text-gray-500";
+            confirmInput.classList.remove("input-error");
+            return true;
+          }
+
+          if (password === confirm) {
+            matchMessage.textContent = "✓ Passwords match";
+            matchMessage.className = "match-message ok text-xs mt-3";
+            confirmInput.classList.remove("input-error");
+            return true;
+          }
+
+          matchMessage.textContent = "✕ Passwords do not match";
+          matchMessage.className = "match-message error text-xs mt-3";
+          confirmInput.classList.add("input-error");
+          return false;
+        }
+
+        passwordInput.addEventListener("input", function () {
+          updateStrengthUI();
+          updateMatchUI();
+        });
+
+        confirmInput.addEventListener("input", updateMatchUI);
+
+        form.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          hideRegisterError();
+
+          const strongEnough = updateStrengthUI();
+          const matching = updateMatchUI();
+
+          if (!strongEnough || !matching) {
+            if (!strongEnough) {
+              passwordInput.classList.add("input-error");
+              passwordInput.focus();
+            } else {
+              confirmInput.focus();
+            }
+            return;
+          }
+
+          const submitButton = form.querySelector('button[type="submit"]');
+          const originalButtonText = submitButton
+            ? submitButton.textContent
+            : "";
+          if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = "Creating account...";
+          }
+
+          try {
+            const result = await window.AuthClient.register({
+              fullName: (fullNameInput.value || "").trim(),
+              email: (emailInput.value || "").trim(),
+              universityId: (universityIdInput.value || "").trim(),
+              password: passwordInput.value || "",
+            });
+
+            if (result.ok) {
+              window.location.href = "./dashboard.html";
+              return;
+            }
+
+            const message =
+              (result.data && result.data.message) ||
+              "Could not create account. Please try again.";
+            showRegisterError(message);
+          } catch (_error) {
+            showRegisterError("Could not connect to server. Please try again.");
+          } finally {
+            if (submitButton) {
+              submitButton.disabled = false;
+              submitButton.textContent = originalButtonText;
+            }
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <script>
+      window.FontAwesomeConfig = {
+        autoReplaceSvg: "nest",
+      };
+    </script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Explore Materials - CUFCAI Learn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+            colors: {
+              dark: {
+                900: "#0F1115",
+                800: "#1A1D24",
+                700: "#262A33",
+                600: "#3A3F4C",
+              },
+              primary: {
+                500: "#D4FF32",
+                600: "#BBE620",
+              },
+              accent: {
+                purple: "#8A2BE2",
+                blue: "#4169E1",
+              },
+            },
+            keyframes: {
+              float: {
+                "0%, 100%": { transform: "translateY(0px)" },
+                "50%": { transform: "translateY(-20px)" },
+              },
+              pulse_slow: {
+                "0%, 100%": { opacity: "0.3" },
+                "50%": { opacity: "0.6" },
+              },
+              blob: {
+                "0%, 100%": { transform: "translate(0, 0) scale(1)" },
+                "33%": { transform: "translate(30px, -50px) scale(1.1)" },
+                "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
+              },
+            },
+            animation: {
+              float: "float 6s ease-in-out infinite",
+              pulse_slow: "pulse_slow 4s ease-in-out infinite",
+              blob: "blob 7s infinite",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* Glowing background effects */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(
+          circle at 20% 50%,
+          rgba(212, 255, 50, 0.1) 0%,
+          transparent 50%
+        );
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(
+          circle at 80% 80%,
+          rgba(138, 43, 226, 0.1) 0%,
+          transparent 50%
+        );
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Animated glowing orbs */
+      .glow-orb-1 {
+        position: fixed;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(
+          circle,
+          rgba(212, 255, 50, 0.3) 0%,
+          rgba(212, 255, 50, 0.1) 40%,
+          transparent 100%
+        );
+        border-radius: 50%;
+        filter: blur(40px);
+        top: -100px;
+        left: -100px;
+        z-index: 1;
+        animation: blob 8s infinite;
+        pointer-events: none;
+      }
+
+      .glow-orb-2 {
+        position: fixed;
+        width: 250px;
+        height: 250px;
+        background: radial-gradient(
+          circle,
+          rgba(138, 43, 226, 0.2) 0%,
+          rgba(138, 43, 226, 0.1) 40%,
+          transparent 100%
+        );
+        border-radius: 50%;
+        filter: blur(50px);
+        bottom: -50px;
+        right: -50px;
+        z-index: 1;
+        animation: blob 10s infinite reverse;
+        pointer-events: none;
+      }
+
+      .glow-orb-3 {
+        position: fixed;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(
+          circle,
+          rgba(65, 105, 225, 0.15) 0%,
+          rgba(65, 105, 225, 0.05) 40%,
+          transparent 100%
+        );
+        border-radius: 50%;
+        filter: blur(40px);
+        top: 50%;
+        right: 10%;
+        z-index: 1;
+        animation: blob 12s infinite;
+        pointer-events: none;
+      }
+
+      /* Ensure content is above glows */
+      main {
+        position: relative;
+        z-index: 10;
+      }
+
+      nav {
+        position: relative;
+        z-index: 50;
+      }
+
+      footer {
+        position: relative;
+        z-index: 10;
+      }
+    </style>
+  </head>
+  <body
+    class="w-full min-h-screen antialiased selection:bg-primary-500 selection:text-dark-900 overflow-x-hidden relative"
+  >
+    <!-- Animated Glowing Orbs -->
+    <div class="glow-orb-1"></div>
+    <div class="glow-orb-2"></div>
+    <div class="glow-orb-3"></div>
+
+    <!-- Navigation -->
+    <nav
+      id="navbar"
+      class="fixed top-0 w-full z-50 glass-panel border-b border-dark-700 transition-all duration-300 py-4"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center">
+          <a href="./index.html" class="flex items-center gap-2">
+            <div
+              class="w-8 h-8 rounded bg-primary-500 flex items-center justify-center text-dark-900 font-bold text-xl"
+            >
+              <i class="fa-solid fa-code"></i>
+            </div>
+            <span class="text-xl font-bold tracking-tight"
+              >CUFCAI <span class="text-primary-500">Learn</span></span
+            >
+          </a>
+
+          <div class="hidden md:flex items-center space-x-8">
+            <a
+              href="./index.html#materials"
+              class="text-gray-300 hover:text-primary-500 transition-colors text-sm font-medium"
+              >Materials</a
+            >
+            <a
+              href="./index.html#courses"
+              class="text-gray-300 hover:text-primary-500 transition-colors text-sm font-medium"
+              >Courses</a
+            >
+            <a
+              href="./index.html#community"
+              class="text-gray-300 hover:text-primary-500 transition-colors text-sm font-medium"
+              >Community</a
+            >
+            <a
+              href="./index.html#about"
+              class="text-gray-300 hover:text-primary-500 transition-colors text-sm font-medium"
+              >About</a
+            >
+          </div>
+
+          <div class="hidden md:flex items-center space-x-4">
+            <a
+              href="./loginPage.html"
+              class="text-gray-300 hover:text-white text-sm font-medium"
+            >
+              Login
+            </a>
+            <a
+              href="./createAccountPage.html"
+              class="neon-glow-btn bg-primary-500 text-dark-900 px-6 py-2 rounded-full font-semibold hover:bg-primary-600 transition-all text-sm"
+            >
+              Sign Up
+            </a>
+          </div>
+
+          <button id="mobile-menu-btn" class="md:hidden text-white text-2xl">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-24 pb-20">
+      <!-- Header Section -->
+      <section
+        class="bg-gradient-to-t from-dark-900 via-dark-800/70 to-transparent py-16 mb-12 relative overflow-hidden"
+      >
+        <!-- Glow effect in header -->
+        <div
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary-500/10 rounded-full filter blur-3xl opacity-30 animate-pulse_slow pointer-events-none"
+        ></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">
+              Explore <span class="text-primary-500">Materials</span>
+            </h1>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+              Discover all courses, subjects, and materials from the Cairo
+              University Computer Science Faculty. Find what you need and start
+              learning.
+            </p>
+          </div>
+
+          <!-- Search Bar -->
+          <div class="max-w-2xl mx-auto">
+            <div class="relative">
+              <div
+                class="glass-panel rounded-full border border-dark-700 px-6 py-3 flex items-center gap-3"
+              >
+                <i class="fa-solid fa-search text-primary-500"></i>
+                <input
+                  type="text"
+                  id="searchInput"
+                  placeholder="Search courses, subjects, or doctors..."
+                  class="bg-transparent outline-none flex-1 text-white placeholder-gray-500 text-sm md:text-base"
+                />
+                <div
+                  id="searchClear"
+                  class="cursor-pointer text-gray-400 hover:text-gray-300 transition-colors hidden"
+                >
+                  <i class="fa-solid fa-xmark"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Filters and Content -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="flex flex-col lg:flex-row gap-8">
+          <!-- Sidebar Filters -->
+          <aside class="lg:w-64 flex-shrink-0">
+            <div class="sticky top-28">
+              <!-- Major/Department Filter -->
+              <div class="mb-8">
+                <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                  <i class="fa-solid fa-filter text-primary-500"></i>
+                  Major
+                </h3>
+                <div class="space-y-2">
+                  <button
+                    class="filter-btn-major w-full text-left px-4 py-3 rounded-lg border border-dark-700 text-gray-300 hover:border-primary-500/50 hover:bg-dark-800 transition-all text-sm font-medium active"
+                    data-major="all"
+                  >
+                    <span class="flex items-center gap-2">
+                      <i
+                        class="fa-solid fa-circle-check text-primary-500 text-xs hidden"
+                      ></i>
+                      All Majors
+                    </span>
+                  </button>
+                  <button
+                    class="filter-btn-major w-full text-left px-4 py-3 rounded-lg border border-dark-700 text-gray-300 hover:border-primary-500/50 hover:bg-dark-800 transition-all text-sm font-medium"
+                    data-major="CS"
+                  >
+                    <span class="flex items-center gap-2">
+                      <i
+                        class="fa-solid fa-circle-check text-primary-500 text-xs hidden"
+                      ></i>
+                      Computer Science
+                    </span>
+                  </button>
+                  <button
+                    class="filter-btn-major w-full text-left px-4 py-3 rounded-lg border border-dark-700 text-gray-300 hover:border-primary-500/50 hover:bg-dark-800 transition-all text-sm font-medium"
+                    data-major="DS"
+                  >
+                    <span class="flex items-center gap-2">
+                      <i
+                        class="fa-solid fa-circle-check text-primary-500 text-xs hidden"
+                      ></i>
+                      Data Science
+                    </span>
+                  </button>
+                  <button
+                    class="filter-btn-major w-full text-left px-4 py-3 rounded-lg border border-dark-700 text-gray-300 hover:border-primary-500/50 hover:bg-dark-800 transition-all text-sm font-medium"
+                    data-major="AI"
+                  >
+                    <span class="flex items-center gap-2">
+                      <i
+                        class="fa-solid fa-circle-check text-primary-500 text-xs hidden"
+                      ></i>
+                      AI & ML
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Year Filter -->
+              <div class="mb-8">
+                <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                  <i class="fa-solid fa-calendar text-primary-500"></i>
+                  Year
+                </h3>
+                <div class="space-y-2">
+                  <button
+                    class="filter-btn-year w-full text-left px-4 py-3 rounded-lg border border-dark-700 text-gray-300 hover:border-primary-500/50 hover:bg-dark-800 transition-all text-sm font-medium active"
+                    data-year="all"
+                  >
+                    <span class="flex items-center gap-2">
+                      <i
+                        class="fa-solid fa-circle-check text-primary-500 text-xs hidden"
+                      ></i>
+                      All Years
+                    </span>
+                  </button>
+                  <button
+                    class="filter-btn-year w-full text-left px-4 py-3 rounded-lg border border-dark-700 text-gray-300 hover:border-primary-500/50 hover:bg-dark-800 transition-all text-sm font-medium"
+                    data-year="1"
+                  >
+                    <span class="flex items-center gap-2">
+                      <i
+                        class="fa-solid fa-circle-check text-primary-500 text-xs hidden"
+                      ></i>
+                      First Year
+                    </span>
+                  </button>
+                  <button
+                    class="filter-btn-year w-full text-left px-4 py-3 rounded-lg border border-dark-700 text-gray-300 hover:border-primary-500/50 hover:bg-dark-800 transition-all text-sm font-medium"
+                    data-year="2"
+                  >
+                    <span class="flex items-center gap-2">
+                      <i
+                        class="fa-solid fa-circle-check text-primary-500 text-xs hidden"
+                      ></i>
+                      Second Year
+                    </span>
+                  </button>
+                  <button
+                    class="filter-btn-year w-full text-left px-4 py-3 rounded-lg border border-dark-700 text-gray-300 hover:border-primary-500/50 hover:bg-dark-800 transition-all text-sm font-medium"
+                    data-year="3"
+                  >
+                    <span class="flex items-center gap-2">
+                      <i
+                        class="fa-solid fa-circle-check text-primary-500 text-xs hidden"
+                      ></i>
+                      Third Year
+                    </span>
+                  </button>
+                  <button
+                    class="filter-btn-year w-full text-left px-4 py-3 rounded-lg border border-dark-700 text-gray-300 hover:border-primary-500/50 hover:bg-dark-800 transition-all text-sm font-medium"
+                    data-year="4"
+                  >
+                    <span class="flex items-center gap-2">
+                      <i
+                        class="fa-solid fa-circle-check text-primary-500 text-xs hidden"
+                      ></i>
+                      Fourth Year
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Type Filter -->
+              <div class="mb-8">
+                <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                  <i class="fa-solid fa-tag text-primary-500"></i>
+                  Type
+                </h3>
+                <div class="space-y-2">
+                  <button
+                    class="filter-btn-type w-full text-left px-4 py-3 rounded-lg border border-dark-700 text-gray-300 hover:border-primary-500/50 hover:bg-dark-800 transition-all text-sm font-medium active"
+                    data-type="all"
+                  >
+                    <span class="flex items-center gap-2">
+                      <i
+                        class="fa-solid fa-circle-check text-primary-500 text-xs hidden"
+                      ></i>
+                      All Types
+                    </span>
+                  </button>
+                  <button
+                    class="filter-btn-type w-full text-left px-4 py-3 rounded-lg border border-dark-700 text-gray-300 hover:border-primary-500/50 hover:bg-dark-800 transition-all text-sm font-medium"
+                    data-type="required"
+                  >
+                    <span class="flex items-center gap-2">
+                      <i
+                        class="fa-solid fa-circle-check text-primary-500 text-xs hidden"
+                      ></i>
+                      Required
+                    </span>
+                  </button>
+                  <button
+                    class="filter-btn-type w-full text-left px-4 py-3 rounded-lg border border-dark-700 text-gray-300 hover:border-primary-500/50 hover:bg-dark-800 transition-all text-sm font-medium"
+                    data-type="elective"
+                  >
+                    <span class="flex items-center gap-2">
+                      <i
+                        class="fa-solid fa-circle-check text-primary-500 text-xs hidden"
+                      ></i>
+                      Elective
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Reset Filters -->
+              <button
+                id="resetFilters"
+                class="w-full px-4 py-2 rounded-lg bg-dark-800/50 border border-dark-700 text-gray-300 hover:border-primary-500/50 hover:text-primary-500 transition-all text-sm font-medium flex items-center justify-center gap-2"
+              >
+                <i class="fa-solid fa-redo"></i>
+                Reset Filters
+              </button>
+            </div>
+          </aside>
+
+          <!-- Content Area -->
+          <div class="flex-1">
+            <!-- Results Count -->
+            <div class="mb-6 flex items-center justify-between flex-wrap gap-4">
+              <div class="text-gray-400 text-sm">
+                Showing <span id="resultCount">0</span> courses
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-gray-400 text-sm">Sort by:</span>
+                <select
+                  id="sortSelect"
+                  class="bg-dark-700 border border-dark-600 rounded-lg px-3 py-2 text-sm text-gray-300 hover:border-primary-500/50 transition-all cursor-pointer"
+                >
+                  <option value="name">Name</option>
+                  <option value="year">Year</option>
+                  <option value="doctor">Doctor</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Courses Grid -->
+            <div
+              id="coursesGrid"
+              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6"
+            >
+              <!-- Course cards will be generated here by JavaScript -->
+            </div>
+
+            <!-- No Results Message -->
+            <div
+              id="noResults"
+              class="col-span-full flex flex-col items-center justify-center py-16 hidden"
+            >
+              <div
+                class="w-16 h-16 rounded-full bg-dark-800 flex items-center justify-center mb-4"
+              >
+                <i class="fa-solid fa-search text-gray-600 text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold mb-2">No courses found</h3>
+              <p class="text-gray-400 text-center max-w-md">
+                Try adjusting your search terms or filters to find what you're
+                looking for.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark-800/50 border-t border-dark-700 py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-8 mb-8">
+          <div>
+            <div class="flex items-center gap-2 mb-4">
+              <div
+                class="w-8 h-8 rounded bg-primary-500 flex items-center justify-center text-dark-900 font-bold"
+              >
+                <i class="fa-solid fa-code"></i>
+              </div>
+              <span class="font-bold"
+                >CUFCAI <span class="text-primary-500">Learn</span></span
+              >
+            </div>
+            <p class="text-gray-400 text-sm">
+              E-learning platform for Cairo University FCAI.
+            </p>
+          </div>
+          <div>
+            <h4 class="font-bold mb-4">Quick Links</h4>
+            <ul class="space-y-2 text-sm text-gray-400">
+              <li>
+                <a href="./index.html" class="hover:text-primary-500 transition"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  href="./index.html#materials"
+                  class="hover:text-primary-500 transition"
+                  >Materials</a
+                >
+              </li>
+              <li>
+                <a
+                  href="./index.html#courses"
+                  class="hover:text-primary-500 transition"
+                  >Courses</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-bold mb-4">Support</h4>
+            <ul class="space-y-2 text-sm text-gray-400">
+              <li>
+                <a href="#" class="hover:text-primary-500 transition"
+                  >Documentation</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-primary-500 transition">FAQ</a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-primary-500 transition"
+                  >Contact</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-bold mb-4">Follow Us</h4>
+            <div class="flex gap-3">
+              <a
+                href="#"
+                class="w-10 h-10 rounded-full bg-dark-700 flex items-center justify-center hover:bg-primary-500 hover:text-dark-900 transition-all"
+              >
+                <i class="fa-brands fa-twitter"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 rounded-full bg-dark-700 flex items-center justify-center hover:bg-primary-500 hover:text-dark-900 transition-all"
+              >
+                <i class="fa-brands fa-github"></i>
+              </a>
+              <a
+                href="#"
+                class="w-10 h-10 rounded-full bg-dark-700 flex items-center justify-center hover:bg-primary-500 hover:text-dark-900 transition-all"
+              >
+                <i class="fa-brands fa-linkedin"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div
+          class="border-t border-dark-700 pt-8 text-center text-gray-400 text-sm"
+        >
+          <p>&copy; 2026 Soluify.inc (Contee) . All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/exploreMaterial.js"></script>
+  </body>
+</html>
